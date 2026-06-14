@@ -4,6 +4,7 @@ from django.shortcuts import render
 from dj_rest_auth.registration.views import SocialLoginView
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from allauth.account.models import EmailAddress
 
 
 class GoogleLogin(SocialLoginView):
@@ -39,6 +40,11 @@ class RegisterView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+        EmailAddress.objects.get_or_create(
+            user=user,
+            email=user.email,
+            defaults={"primary": True, "verified": False},
+        )
 
         refresh = RefreshToken.for_user(user)
 
@@ -47,7 +53,7 @@ class RegisterView(generics.CreateAPIView):
                 "user": UserProfileSerializer(user).data,
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
-                "message": "User regirstered successfully",
+                "message": "User registered successfully",
             },
             status=status.HTTP_201_CREATED,
         )

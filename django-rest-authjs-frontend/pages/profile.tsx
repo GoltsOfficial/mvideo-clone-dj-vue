@@ -19,7 +19,7 @@ export default function Home() {
       });
       setResponse(JSON.stringify(response.data));
     } catch (error) {
-      setResponse(error.message);
+      setResponse(error instanceof Error ? error.message : "Request failed");
     }
   };
 

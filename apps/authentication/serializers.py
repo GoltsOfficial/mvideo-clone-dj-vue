@@ -61,6 +61,7 @@ class UserLoginSerializer(serializers.Serializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     """Сериализатор для профиля пользователя"""
 
+    pk = serializers.IntegerField(source="id", read_only=True)
     full_name = serializers.ReadOnlyField()
     posts_count = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
@@ -69,6 +70,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             "id",
+            "pk",
             "username",
             "email",
             "first_name",

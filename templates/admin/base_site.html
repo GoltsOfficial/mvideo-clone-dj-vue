@@ -1,0 +1,26 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:"MVideo Admin" }}{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/css/custom_admin.css' %}">
+{% endblock %}
+
+{% block branding %}
+<div id="site-name" class="custom-admin-brand">
+  <a href="{% url 'admin:index' %}" aria-label="{{ site_header|default:'MVideo Admin' }}">
+    <span class="custom-admin-logo">M</span>
+    <span>
+      <strong>{{ site_header|default:"MVideo Admin" }}</strong>
+      <small>Control panel</small>
+    </span>
+  </a>
+</div>
+{% if user.is_anonymous %}
+  {% include "admin/color_theme_toggle.html" %}
+{% endif %}
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
