@@ -8,7 +8,6 @@ asgiref==3.9.1
     # via
     #   mvideo-clone-dj-vue (pyproject.toml)
     #   django
-    #   django-cors-headers
 billiard==4.2.1
     # via
     #   mvideo-clone-dj-vue (pyproject.toml)
@@ -21,6 +20,8 @@ certifi==2025.8.3
     # via
     #   mvideo-clone-dj-vue (pyproject.toml)
     #   requests
+cffi==2.0.0
+    # via cryptography
 charset-normalizer==3.4.3
     # via
     #   mvideo-clone-dj-vue (pyproject.toml)
@@ -52,18 +53,30 @@ cron-descriptor==1.4.5
     # via
     #   mvideo-clone-dj-vue (pyproject.toml)
     #   django-celery-beat
+cryptography==48.0.0
+    # via pyjwt
+defusedxml==0.7.1
+    # via python3-openid
+dj-rest-auth==4.0.0
+    # via mvideo-clone-dj-vue (pyproject.toml)
 django==5.2.5
     # via
     #   mvideo-clone-dj-vue (pyproject.toml)
+    #   dj-rest-auth
+    #   django-allauth
     #   django-celery-beat
     #   django-cors-headers
     #   django-filter
     #   django-timezone-field
     #   djangorestframework
     #   djangorestframework-simplejwt
+django-allauth==0.52.0
+    # via
+    #   mvideo-clone-dj-vue (pyproject.toml)
+    #   dj-rest-auth
 django-celery-beat==2.8.1
     # via mvideo-clone-dj-vue (pyproject.toml)
-django-cors-headers==4.7.0
+django-cors-headers==4.1.0
     # via mvideo-clone-dj-vue (pyproject.toml)
 django-filter==25.1
     # via mvideo-clone-dj-vue (pyproject.toml)
@@ -74,6 +87,7 @@ django-timezone-field==7.1
 djangorestframework==3.16.1
     # via
     #   mvideo-clone-dj-vue (pyproject.toml)
+    #   dj-rest-auth
     #   djangorestframework-simplejwt
 djangorestframework-simplejwt==5.5.1
     # via mvideo-clone-dj-vue (pyproject.toml)
@@ -87,6 +101,8 @@ kombu==5.5.4
     # via
     #   mvideo-clone-dj-vue (pyproject.toml)
     #   celery
+oauthlib==3.3.1
+    # via requests-oauthlib
 packaging==25.0
     # via
     #   mvideo-clone-dj-vue (pyproject.toml)
@@ -100,9 +116,12 @@ prompt-toolkit==3.0.51
     #   click-repl
 psycopg2==2.9.10
     # via mvideo-clone-dj-vue (pyproject.toml)
+pycparser==3.0
+    # via cffi
 pyjwt==2.10.1
     # via
     #   mvideo-clone-dj-vue (pyproject.toml)
+    #   django-allauth
     #   djangorestframework-simplejwt
 python-crontab==3.3.0
     # via
@@ -114,12 +133,18 @@ python-dateutil==2.9.0.post0
     #   celery
 python-decouple==3.8
     # via mvideo-clone-dj-vue (pyproject.toml)
+python3-openid==3.2.0
+    # via django-allauth
 redis==6.4.0
     # via mvideo-clone-dj-vue (pyproject.toml)
 requests==2.32.5
     # via
     #   mvideo-clone-dj-vue (pyproject.toml)
+    #   django-allauth
+    #   requests-oauthlib
     #   stripe
+requests-oauthlib==2.0.0
+    # via django-allauth
 six==1.17.0
     # via
     #   mvideo-clone-dj-vue (pyproject.toml)

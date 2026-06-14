@@ -18,18 +18,24 @@ DJANGO_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
 ]
 
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "rest_framework.authtoken",
     "corsheaders",
     "django_filters",
     "rest_framework_simplejwt",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "dj_rest_auth",
+    "dj_rest_auth.registration",
+    "allauth.socialaccount.providers.google",
 ]
 
-LOCAL_APPS = [
-    # Here local apps
-]
+LOCAL_APPS = ["apps.authentication"]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -110,7 +116,7 @@ MEDIA_ROOT = BASE_DIR / config("MEDIA_ROOT", default="media")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Custom User Model
-# AUTH_USER_MODEL = "accounts.User"
+AUTH_USER_MODEL = "authentication.User"
 
 # REST Framework Configuration
 REST_FRAMEWORK = {
@@ -139,26 +145,55 @@ REST_FRAMEWORK = {
 
 
 # CORS Configuration
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Укажите порт, на котором работает ваш Vue.js
-    "http://127.0.0.1:5173",
-]
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:3000/",
+        "http://127.0.0.1:3000/",
+    ]
+
+
+# Настройки сайта для allauth
+SITE_ID = 1
+
+# Отключаем подтверждение email для простоты (как в статье)
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = "none"
 
 # JWT Configuration
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
-    "ROTATE_REFRESH_TOKENS": True,
-    "BLACKLIST_AFTER_ROTATION": True,
+    "ROTATE_REFRESH_TOKENS": True,  # Безопаснее - каждый refresh даёт новый токен
+    "BLACKLIST_AFTER_ROTATION": True,  # Старые токены больше нельзя использовать
     "UPDATE_LAST_LOGIN": True,
-    "ALGORITHM": "HS256",
-    "SIGNING_KEY": SECRET_KEY,
-    "VERIFYING_KEY": None,
+    "ALGORITHM": "HS256",  # Стандарт, достаточно безопасно
+    "SIGNING_KEY": SECRET_KEY,  # Используйте SECRET_KEY Django
     "AUTH_HEADER_TYPES": ("Bearer",),
-    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
     "USER_ID_FIELD": "id",
     "USER_ID_CLAIM": "user_id",
 }
+
+# Настройки dj-rest-auth для работы с JWT
+REST_AUTH = {
+    "USE_JWT": True,
+    "JWT_AUTH_HTTPONLY": False,  # Чтобы получать refresh токен в ответе
+}
+# SIMPLE_JWT = {
+#     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+#     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+#     "ROTATE_REFRESH_TOKENS": True,
+#     "BLACKLIST_AFTER_ROTATION": True,
+#     "UPDATE_LAST_LOGIN": True,
+#     "ALGORITHM": "HS256",
+#     "SIGNING_KEY": SECRET_KEY,
+#     "VERIFYING_KEY": None,
+#     "AUTH_HEADER_TYPES": ("Bearer",),
+#     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+#     "USER_ID_FIELD": "id",
+#     "USER_ID_CLAIM": "user_id",
+# }
 
 # Security Settings
 SECURE_BROWSER_XSS_FILTER = True
@@ -216,6 +251,31 @@ LOGGING = {
     },
 }
 
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "APP": {
+            "client_id": config("Client_ID"),
+            "secret": config("Client_secret"),
+            "key": "",
+        },
+        "SCOPE": ["profile", "email"],
+        "AUTH_PARAMS": {"access_type": "online"},
+        "VERIFIED_EMAIL": True,
+    }
+}
+
+# Настройки allauth для работы с вашей кастомной моделью
+# Указываем, что для регистрации/входа используется поле email
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_USERNAME_REQUIRED = True  # у вас username обязателен
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USER_MODEL_USERNAME_FIELD = (
+    "username"  # поле в вашей модели, которое отвечает за username
+)
+ACCOUNT_USER_MODEL_EMAIL_FIELD = (
+    "email"  # поле в вашей модели, которое отвечает за email
+)
 # # URL фронтенда для редиректов
 # FRONTEND_URL = config("FRONTEND_URL", default="http://localhost:5173")
 
